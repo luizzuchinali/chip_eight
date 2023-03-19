@@ -1,5 +1,5 @@
-use device_query::{DeviceQuery, DeviceState};
-use egui::{Color32, Painter, Pos2, Rect, Rounding, Shape};
+use device_query::{DeviceQuery, DeviceState, Keycode};
+use egui::{Color32, epaint, Painter, Pos2, Rect, Rounding, Shape};
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[derive(serde::Deserialize, serde::Serialize)]
@@ -60,14 +60,11 @@ impl eframe::App for Application {
             );
             let Rect { min: min_bounds, max: max_bounds } = painter.clip_rect();
 
+            let state = DeviceState::new();
+            let mouse = state.get_mouse();
             let rect = Rect { min: min_bounds, max: Pos2 { x: 100.0, y: 100.0 } };
-            let shape = Shape::rect_filled(rect, Rounding::none(), Color32::from_rgb(255, 0, 0));
-
-            painter.add(shape);
 
             ui.expand_to_include_rect(painter.clip_rect());
-
-            egui::warn_if_debug_build(ui);
         });
     }
 
